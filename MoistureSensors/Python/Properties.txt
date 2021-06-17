@@ -1,1 +1,1 @@
-{"sendFrequency": 1, "threshold": 30, "waterRuntime": 30, "waitTime": 30, "min1": 10, "min2": 10, "min3": 10, "min4": 10, "max1": 103, "max2": 103, "max3": 103, "max4": 103}
+{"sendFrequency": 1, "threshold": 30, "waterRuntime": 30, "waitTime": 30, "min1": 0, "min2": 0, "min3": 0, "min4": 0, "max1": 100, "max2": 100, "max3": 100, "max4": 100}

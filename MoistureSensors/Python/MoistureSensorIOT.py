@@ -65,7 +65,7 @@ def derive_device_key(device_id, group_symmetric_key):
     device_key_encoded = base64.b64encode(signed_hmac.digest())
     return device_key_encoded.decode("utf-8")
 
-# modified arduino map() function, hard coded inputs to keep code consise, used to correct uncalibrated data
+# modified arduino map() function, hard coded inputs to keep code consise, used to correct uncalibrated data. Code modified from https://www.arduino.cc/reference/en/language/functions/math/map/
 def pMap(val, sensor):
     return int(round(val - min_fix[sensor]) * (100 - 0) / (max_fix[sensor] - min_fix[sensor]))
 
@@ -73,18 +73,18 @@ def pMap(val, sensor):
 async def send_telemetry():
     while not terminate:
         if device_client and device_client.connected:
-            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) # Serial must be plugged or this will crash the program
             ser.flush()
-            line = ser.readline().decode('utf-8').rstrip()
+            line = ser.readline().decode('utf-8').rstrip() # Grab Json String from Serial
             data = json.loads(line)
             payload = '{"sensorOne": %f, "sensorTwo": %f, "sensorThree": %f, "sensorFour": %f, "uncalibratedOne": %f, "uncalibratedTwo": %f, "uncalibratedThree": %f, "uncalibratedFour": %f}' % (pMap(data["sensorOne"], 0), pMap(data["sensorTwo"], 1), pMap(data["sensorThree"], 2), pMap(data["sensorFour"], 3), data["sensorOne"], data["sensorTwo"], data["sensorThree"], data["sensorFour"])
             print("sending message: %s" % (payload))
             msg = Message(payload)
             msg.content_type = "application/json"
             msg.content_encoding = "utf-8"
-            if ((pMap(data["sensorOne"], 0) + pMap(data["sensorTwo"], 1) + pMap(data["sensorThree"], 2) + pMap(data["sensorFour"], 3)) / 4) <= threshold:
+            if ((pMap(data["sensorOne"], 0) + pMap(data["sensorTwo"], 1) + pMap(data["sensorThree"], 2) + pMap(data["sensorFour"], 3)) / 4) <= threshold: # use pMap function to check if calibrated values average to be threshold or lower
                 global openWater
-                openWater = True
+                openWater = True # Trigger open value function to release water
             try:
                 await asyncio.wait_for(device_client.send_message(msg), timeout=await_timeout)
                 print("completed sending message")
@@ -97,17 +97,16 @@ async def send_telemetry():
 # coroutine to open the valve for releasing the water
 async def open_valve():
     while not terminate:
-        global openWater
-        if openWater:
-            GPIO_PIN = 17
+        global openWater 
+        if openWater: # loops til openWater is triggered in sendTelemetry
+            GPIO_PIN = 17 # pin can be changed if a different pin is used in wiring
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(GPIO_PIN, GPIO.OUT)
-            GPIO.output(GPIO_PIN, GPIO.HIGH)
-            await asyncio.sleep(waterRuntime)
-            GPIO.output(GPIO_PIN, GPIO.LOW)
-            await asyncio.sleep(waitTime)
+            GPIO.output(GPIO_PIN, GPIO.HIGH) # open valve
+            await asyncio.sleep(waterRuntime) # sleep until its time to shut the value off
+            GPIO.output(GPIO_PIN, GPIO.LOW) # close value
+            await asyncio.sleep(waitTime) # sleep for waittime
             openWater = False
-        await asyncio.sleep(sendFrequency)
 
 
 # coroutine that sends reported properties on a set frequency until terminated
@@ -136,7 +135,7 @@ async def desired_property_handler(patch):
             global sendFrequency
             sendFrequency = patch[key]
             prop["sendFrequency"] = sendFrequency
-        if key == "wateringParameters":
+        if key == "wateringParameters": # watering values
             global waterRuntime, waitTime, threshold
             waterRuntime = patch[key]["waterRuntime"]
             prop["waterRuntime"] = waterRuntime
@@ -144,7 +143,7 @@ async def desired_property_handler(patch):
             prop["waitTime"] = waitTime
             threshold = patch[key]["threshold"]
             prop["threshold"] = threshold
-        if key == "calibrate":
+        if key == "calibrate": # calibration values
             global min_fix, max_fix
             min_fix = [patch[key]["minFix"]["one"], patch[key]["minFix"]["two"], patch[key]["minFix"]["three"], patch[key]["minFix"]["four"]]
             prop["min1"] = min_fix[0]
@@ -161,7 +160,7 @@ async def desired_property_handler(patch):
             await asyncio.wait_for(device_client.patch_twin_reported_properties(reported_payload), timeout=await_timeout)
             print(reported_payload)
         
-        with open('Properties.txt', 'w') as outfile:
+        with open('Properties.txt', 'w') as outfile: # writes new values to properties file
             json.dump(prop, outfile)
 
 
