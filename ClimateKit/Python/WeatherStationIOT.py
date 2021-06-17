@@ -14,18 +14,18 @@ from azure.iot.device import MethodResponse
 from azure.iot.device import exceptions
 
 # property file
-json_file =  open('Properties.txt')
+json_file = open('Properties.txt')
 prop = json.load(json_file)
 json_file.close()
 
 # device settings - FILL IN YOUR VALUES HERE
-scope_id = "0ne002C0E3A"
-group_symmetric_key = "d0T14jbEKvxZKC0HsKhktudbTlRLdm6W94oKqDrt1cD3H9Mu1JQ5uvF0XO/jwuT/tDIKZTWUze+TBGFV2rcJpg=="
+scope_id = ""
+group_symmetric_key = ""
 
 # optional device settings - CHANGE IF DESIRED/NECESSARY
 provisioning_host = "global.azure-devices-provisioning.net"
 device_id = "weather_station_rpi"
-model_id = "dtmi:hollierHome:weatherstation2y2;1"  # 
+model_id = "dtmi:sample:weatherstation;1"  # 
 
 # test setting flags
 telemetry_send_on = True
@@ -59,11 +59,12 @@ def derive_device_key(device_id, group_symmetric_key):
 async def send_telemetry():
     while not terminate:
         if device_client and device_client.connected:
-            ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+            ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1) # Serial must be plugged or this will crash the program
             ser.flush()
             line = ser.readline().decode('utf-8').rstrip()
-            data = line.split()
-            if len(data) == 7:
+            data = line.split() # write serial data into an array
+            if len(data) == 7: # make sure all data is retrieved before continue
+                # data array is in following order Wind Speed, Wind Direction, Rain Height, Temperature, Humidity, pressure, altitude - altitude is calculated using pressure from the weatherbit, so it may be inaccurate
                 payload = '{"windSpeed": %f, "windDirection": "%s", "rainHeight": %f, "temperature": %f, "humidity": %f, "pressure": %f, "altitude": %f}' % (float(data[0]), data[1], float(data[2]), (float(data[3])/100), (float(data[4])/1024), ((float(data[5])/256)), float(data[6]))
                 print("sending message: %s" % (payload))
                 msg = Message(payload)

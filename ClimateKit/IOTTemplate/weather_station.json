@@ -1,0 +1,116 @@
+[
+  {
+    "@id": "dtmi:sample:weatherstation;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@id": "dtmi:sample:weatherstation:windSpeed;1",
+        "@type": [
+          "Telemetry",
+          "Velocity"
+        ],
+        "displayName": {
+          "en": "Wind Speed"
+        },
+        "name": "windSpeed",
+        "schema": "double",
+        "unit": "milePerHour"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:windDirection;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Wind Direction"
+        },
+        "name": "windDirection",
+        "schema": "string"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:sendFrequency;1",
+        "@type": [
+          "Property",
+          "TimeSpan"
+        ],
+        "displayName": {
+          "en": "Send Frequency"
+        },
+        "name": "sendFrequency",
+        "schema": "integer",
+        "unit": "second",
+        "writable": true
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:rainHeight;1",
+        "@type": [
+          "Telemetry",
+          "Distance"
+        ],
+        "displayName": {
+          "en": "Rain Height"
+        },
+        "name": "rainHeight",
+        "schema": "double",
+        "unit": "inch"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:temperature;1",
+        "@type": [
+          "Telemetry",
+          "Temperature"
+        ],
+        "displayName": {
+          "en": "Temperature"
+        },
+        "name": "temperature",
+        "schema": "double",
+        "unit": "degreeCelsius"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:humidity;1",
+        "@type": [
+          "Telemetry",
+          "RelativeHumidity"
+        ],
+        "displayName": {
+          "en": "Humidity"
+        },
+        "name": "humidity",
+        "schema": "double",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:pressure;1",
+        "@type": [
+          "Telemetry",
+          "Pressure"
+        ],
+        "displayName": {
+          "en": "Pressure"
+        },
+        "name": "pressure",
+        "schema": "double",
+        "unit": "pascal"
+      },
+      {
+        "@id": "dtmi:sample:weatherstation:altitude;1",
+        "@type": [
+          "Telemetry",
+          "Distance"
+        ],
+        "displayName": {
+          "en": "Altitude"
+        },
+        "name": "altitude",
+        "schema": "double",
+        "unit": "metre"
+      }
+    ],
+    "displayName": {
+      "en": "weather_station"
+    },
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ]
+  }
+]

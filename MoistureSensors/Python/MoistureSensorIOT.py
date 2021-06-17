@@ -19,13 +19,13 @@ prop = json.load(json_file)
 json_file.close()
 
 # device settings - FILL IN YOUR VALUES HERE
-scope_id = "0ne002C0E3A"
-group_symmetric_key = "d0T14jbEKvxZKC0HsKhktudbTlRLdm6W94oKqDrt1cD3H9Mu1JQ5uvF0XO/jwuT/tDIKZTWUze+TBGFV2rcJpg=="
+scope_id = ""
+group_symmetric_key = ""
 
 # optional device settings - CHANGE IF DESIRED/NECESSARY
 provisioning_host = "global.azure-devices-provisioning.net"
 device_id = "moisture_sensor_rpi"
-model_id = "dtmi:hollierHome:moisturesensors74j;1"  # 
+model_id = "dtmi:sample:moisturesensors;1"  # 
 
 # test setting flags
 telemetry_send_on = True

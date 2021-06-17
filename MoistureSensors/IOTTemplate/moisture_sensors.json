@@ -1,0 +1,265 @@
+[
+  {
+    "@id": "dtmi:sample:moisturesensors;1",
+    "@type": "Interface",
+    "contents": [
+      {
+        "@id": "dtmi:sample:moisturesensors:sensorOne;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "SensorOne"
+        },
+        "name": "sensorOne",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:sensorTwo;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "SensorTwo"
+        },
+        "name": "sensorTwo",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:sensorThree;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "SensorThree"
+        },
+        "name": "sensorThree",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:sensorFour;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "SensorFour"
+        },
+        "name": "sensorFour",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:sendFrequency;1",
+        "@type": [
+          "Property",
+          "TimeSpan"
+        ],
+        "displayName": {
+          "en": "Send Frequency"
+        },
+        "name": "sendFrequency",
+        "schema": "double",
+        "unit": "second",
+        "writable": true
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:wateringParameters;1",
+        "@type": "Property",
+        "displayName": {
+          "en": "Watering Parameters"
+        },
+        "name": "wateringParameters",
+        "schema": {
+          "@id": "dtmi:sample:moisturesensors:wateringParameters:schema;1",
+          "@type": "Object",
+          "displayName": {
+            "en": "Object"
+          },
+          "fields": [
+            {
+              "@id": "dtmi:sample:moisturesensors:wateringParameters:schema:threshold;1",
+              "displayName": {
+                "en": "Threshold"
+              },
+              "name": "threshold",
+              "schema": "integer"
+            },
+            {
+              "@id": "dtmi:sample:moisturesensors:wateringParameters:schema:waterRuntime;1",
+              "displayName": {
+                "en": "Water Runtime"
+              },
+              "name": "waterRuntime",
+              "schema": "integer"
+            },
+            {
+              "@id": "dtmi:sample:moisturesensors:wateringParameters:schema:waittime;1",
+              "displayName": {
+                "en": "WaitTime"
+              },
+              "name": "waittime",
+              "schema": "integer"
+            }
+          ]
+        },
+        "writable": true
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:uncalibratedOne;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Uncalibrated One"
+        },
+        "name": "uncalibratedOne",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:uncalibratedTwo;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Uncalibrated Two"
+        },
+        "name": "uncalibratedTwo",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:uncalibratedThree;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Uncalibrated Three"
+        },
+        "name": "uncalibratedThree",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:uncalibratedFour;1",
+        "@type": "Telemetry",
+        "displayName": {
+          "en": "Uncalibrated Four"
+        },
+        "name": "uncalibratedFour",
+        "schema": "integer",
+        "unit": "percent"
+      },
+      {
+        "@id": "dtmi:sample:moisturesensors:calibrate;1",
+        "@type": "Property",
+        "displayName": {
+          "en": "Calibrate"
+        },
+        "name": "calibrate",
+        "schema": {
+          "@id": "dtmi:sample:moisturesensors:calibrate:schema;1",
+          "@type": "Object",
+          "displayName": {
+            "en": "Object"
+          },
+          "fields": [
+            {
+              "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix;1",
+              "displayName": {
+                "en": "Min Fix"
+              },
+              "name": "minFix",
+              "schema": {
+                "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix:schema;1",
+                "@type": "Object",
+                "displayName": {
+                  "en": "Object"
+                },
+                "fields": [
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix:schema:one;1",
+                    "displayName": {
+                      "en": "One"
+                    },
+                    "name": "one",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix:schema:two;1",
+                    "displayName": {
+                      "en": "Two"
+                    },
+                    "name": "two",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix:schema:three;1",
+                    "displayName": {
+                      "en": "Three"
+                    },
+                    "name": "three",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:minFix:schema:four;1",
+                    "displayName": {
+                      "en": "Four"
+                    },
+                    "name": "four",
+                    "schema": "integer"
+                  }
+                ]
+              }
+            },
+            {
+              "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix;1",
+              "displayName": {
+                "en": "Max Fix"
+              },
+              "name": "maxFix",
+              "schema": {
+                "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix:schema;1",
+                "@type": "Object",
+                "displayName": {
+                  "en": "Object"
+                },
+                "fields": [
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix:schema:one;1",
+                    "displayName": {
+                      "en": "One"
+                    },
+                    "name": "one",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix:schema:two;1",
+                    "displayName": {
+                      "en": "Two"
+                    },
+                    "name": "two",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix:schema:three;1",
+                    "displayName": {
+                      "en": "Three"
+                    },
+                    "name": "three",
+                    "schema": "integer"
+                  },
+                  {
+                    "@id": "dtmi:sample:moisturesensors:calibrate:schema:maxFix:schema:four;1",
+                    "displayName": {
+                      "en": "Four"
+                    },
+                    "name": "four",
+                    "schema": "integer"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "writable": true
+      }
+    ],
+    "displayName": {
+      "en": "moisture_sensors"
+    },
+    "@context": [
+      "dtmi:iotcentral:context;2",
+      "dtmi:dtdl:context;2"
+    ]
+  }
+]
