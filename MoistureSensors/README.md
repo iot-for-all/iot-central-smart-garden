@@ -9,6 +9,7 @@
   <li> IoT Power Relay https://www.sparkfun.com/products/14236 </li>
   <li> Solinoid Value Hosing https://www.amazon.com/SparkFun-12V-Solenoid-Valve/dp/B007R9U9BM </li>
   <li> Some way to connect the relay to the valve (I used a Female DC Power Terminal https://www.cctvcameraworld.com/dc-female-power-terminal.html connected to a barrel jack cable with an outlet plug) </li>
+  <li> A container deep enough to submerge sensor </li>
 </ul>
 
 ## Recommended supplies
@@ -28,7 +29,27 @@ Make sure to let it completely dry between coats, or it may end up looking someo
 once you have everything the way you want it cover the electrical portion with a heat shrink tubing that fits and shrink it down to fit overtop
 
 ## Wiring
-1. Start wiring connecting all four moisture sensors to the analog inputs on your ardiuno
+1. Start wiring by connecting all four moisture sensors to the analog inputs on your ardiuno
+  - Connect AOUT on the sensor to analog 0 - 3
+  - Connect VCC on sensor to 5V
+  - Connect GND on sensor to GND
+
+![image](https://user-images.githubusercontent.com/59976596/122829358-c2821180-d29b-11eb-9ea5-3defc3527353.png)
+
+2. Next use your USB B to USB A to serial connect your Arduino to the Raspberry Pi
+
+![image](https://user-images.githubusercontent.com/59976596/122829848-5d7aeb80-d29c-11eb-8ecb-eea9af00bd73.png)
+
+3. Connect wires to GPIO pins 9 (GND) and 11 (GPIO 17), then connect these wires to the relay with 9 to Negative and 11 to Positive
+
+![image](https://user-images.githubusercontent.com/59976596/122832538-5950cd00-d2a0-11eb-9bf4-a4fa1a203821.png) <br>
+(Red - pin 11, Brown - pin 9)
+
+4. Plug in the valve to normally off by connecting a plug to a valve
+
+![image](https://user-images.githubusercontent.com/59976596/122833043-265b0900-d2a1-11eb-9855-05e5d423de88.png)
+
+5. Plug in the relay and the Raspberry Pi and your wiring is complete
 
 ## Code Setup
 ### Arduino Code
@@ -52,8 +73,8 @@ group_symmetric_key = ""
 ``` Python
 # optional device settings - CHANGE IF DESIRED/NECESSARY
 provisioning_host = "global.azure-devices-provisioning.net"
-device_id = ""
-model_id = ""  
+device_id = "moisture_sensor_rpi"
+model_id = "dtmi:sample:moisturesensors;1"  
 ```
 3. This program requires Python 3.7+ to run check your version using
 ``` shell
@@ -83,5 +104,25 @@ To load it go to Device Templates in IOT Central, hit new -> IOT Device -> Next 
 Then hit Import a Model and load the included moisture_sensors.json <br>
 From here you are free to add your own views and forms using the incoming data
 
-## Properties File
+## Calibration
+Since the sensors are all a bit different, each sensor will have to be calibrated separately. You can do this either through IOT or the property file. For each sensor you will need to find the minimum value and the maximum value.
+1. Start by running the IOT program in order to see the values of the sensors
+2. One by one pick the dry sensors up by the top avoiding any connections
+3. Write down the uncalibrated value for each sensor
+4. Next take a container of water that you can submerge your sensor in and one by one submerge your sensors to the white line
+5. Let the sensor sit submerged until the uncalibrated value stops changing, when it does write down that value
+6. Now with the dry and wet values for the sensors, use them to fill out either the min and max values in the property file, or the calibrate property on IOT Central using forms
 
+## Properties File
+For the moisture sensors there are twelve editable properties in the property file. <br>
+In order, they are:
+<ul>
+  <li> sendFrequency: How often telemetry is sent to IOT Central </li>
+  <li> threshold: Threshold average value for opening the valve </li>
+  <li> waterRuntime: How long the valve stays open </li>
+  <li> waitTime: Time after the valve closes before it can be opened again, allows the sensors time to adjust </li>
+  <li> min1 - 4: Lower bounds for calibration </li>
+  <li> max1 - 4: Upper bounds for calibration </li>
+</ul>
+
+These properties are directly editable from the properties file, or through a form on IOT Central
