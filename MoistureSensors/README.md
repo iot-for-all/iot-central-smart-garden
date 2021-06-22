@@ -98,26 +98,26 @@ python MoistureSensorIOT.py
 python3 MoistureSensorIOT.py
 ``` 
 
-## IOT Central Template
+## IoT Central Template
 Included is a basic device template for this program <br>
-To load it go to Device Templates in IOT Central, hit new -> IOT Device -> Next -> name it -> Next -> Create <br>
+To load it go to Device Templates in IoT Central, hit new -> IoT Device -> Next -> name it -> Next -> Create <br>
 Then hit Import a Model and load the included moisture_sensors.json <br>
 From here you are free to add your own views and forms using the incoming data
 
 ## Calibration
-Since the sensors are all a bit different, each sensor will have to be calibrated separately. You can do this either through IOT or the property file. For each sensor you will need to find the minimum value and the maximum value.
-1. Start by running the IOT program in order to see the values of the sensors
+Since the sensors are all a bit different, each sensor will have to be calibrated separately. You can do this either through IoT or the property file. For each sensor you will need to find the minimum value and the maximum value.
+1. Start by running the IoT program in order to see the values of the sensors
 2. One by one pick the dry sensors up by the top avoiding any connections
 3. Write down the uncalibrated value for each sensor
 4. Next take a container of water that you can submerge your sensor in and one by one submerge your sensors to the white line
 5. Let the sensor sit submerged until the uncalibrated value stops changing, when it does write down that value
-6. Now with the dry and wet values for the sensors, use them to fill out either the min and max values in the property file, or the calibrate property on IOT Central using forms
+6. Now with the dry and wet values for the sensors, use them to fill out either the min and max values in the property file, or the calibrate property on IoT Central using forms
 
 ## Properties File
 For the moisture sensors there are twelve editable properties in the property file. <br>
 In order, they are:
 <ul>
-  <li> sendFrequency: How often telemetry is sent to IOT Central </li>
+  <li> sendFrequency: How often telemetry is sent to IoT Central </li>
   <li> threshold: Threshold average value for opening the valve </li>
   <li> waterRuntime: How long the valve stays open </li>
   <li> waitTime: Time after the valve closes before it can be opened again, allows the sensors time to adjust </li>
@@ -125,4 +125,4 @@ In order, they are:
   <li> max1 - 4: Upper bounds for calibration </li>
 </ul>
 
-These properties are directly editable from the properties file, or through a form on IOT Central
+These properties are directly editable from the properties file, or through a form on IoT Central
