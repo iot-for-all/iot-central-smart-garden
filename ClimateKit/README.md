@@ -4,7 +4,7 @@
   <li> Micro: Climate Kit </li>
   <li> Micro: Bit (Not included with Climate Kit)</li>
   <li> Raspberry Pi</li>
-  <li> USB to USB micro cable (or someway to serial connect your micro:bit to the raspberry pi)</li>
+  <li> USB A to USB micro B cable (or someway to serial connect your micro:bit to the raspberry pi)</li>
 </ul> 
 
 Be sure to assemble your Micro: Climate Kit before starting, for instructions on assembly follow Sparkfun's assembly guide here: https://learn.sparkfun.com/tutorials/weather-meter-hookup-guide
