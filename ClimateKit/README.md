@@ -61,15 +61,15 @@ python WeatherStationIOT.py
 python3 WeatherStationIOT.py
 ``` 
 
-## IOT Central Template
+## IoT Central Template
 Included is a basic device template for this program <br>
-To load it go to Device Templates in IOT Central, hit new -> IOT Device -> Next -> name it -> Next -> Create <br>
+To load it go to Device Templates in IoT Central, hit new -> IoT Device -> Next -> name it -> Next -> Create <br>
 Then hit Import a Model and load the included weather_station.json <br>
 From here you are free to add your own views and forms using the incoming data
 
 ## Properties File
 Unlike the Moisture Sensor properties file, This one has only a single option, being the sendFrequency option, which determines the length between telemetry sends, 
-feel free to edit this either directly from the file or through a form on IOT Central, it is writable on the template!
+feel free to edit this either directly from the file or through a form on IoT Central, it is writable on the template!
 
 ## Unused Climate Kit Features
 The Micro:Climate Kit includes two sensors unused in this project
