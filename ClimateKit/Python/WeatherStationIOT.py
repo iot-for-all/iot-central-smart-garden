@@ -6,6 +6,8 @@ import random
 import serial
 import json
 import RPi.GPIO as GPIO
+import pathlib
+import traceback
 
 from azure.iot.device.aio import ProvisioningDeviceClient
 from azure.iot.device.aio import IoTHubDeviceClient
@@ -14,13 +16,13 @@ from azure.iot.device import MethodResponse
 from azure.iot.device import exceptions
 
 # property file
-json_file = open('Properties.txt')
+json_file = open(str(pathlib.Path(__file__).parent.resolve()) + '/Properties.txt')
 prop = json.load(json_file)
 json_file.close()
 
 # device settings - FILL IN YOUR VALUES HERE
-scope_id = ""
-group_symmetric_key = ""
+scope_id = "0ne002C0E3A"
+group_symmetric_key = "d0T14jbEKvxZKC0HsKhktudbTlRLdm6W94oKqDrt1cD3H9Mu1JQ5uvF0XO/jwuT/tDIKZTWUze+TBGFV2rcJpg=="
 
 # optional device settings - CHANGE IF DESIRED/NECESSARY
 provisioning_host = "global.azure-devices-provisioning.net"
@@ -46,6 +48,11 @@ device_client = None
 terminate = False
 trying_to_connect = False
 max_connection_attempt = 3
+debug = False
+
+def myPrint(msg):
+    if debug:
+        print(msg)
 
 # derives a symmetric device key for a device id using the group symmetric key
 def derive_device_key(device_id, group_symmetric_key):
@@ -66,13 +73,13 @@ async def send_telemetry():
             if len(data) == 7: # make sure all data is retrieved before continue
                 # data array is in following order Wind Speed, Wind Direction, Rain Height, Temperature, Humidity, pressure, altitude - altitude is calculated using pressure from the weatherbit, so it may be inaccurate
                 payload = '{"windSpeed": %f, "windDirection": "%s", "rainHeight": %f, "temperature": %f, "humidity": %f, "pressure": %f, "altitude": %f}' % (float(data[0]), data[1], float(data[2]), (float(data[3])/100), (float(data[4])/1024), ((float(data[5])/256)), float(data[6]))
-                print("sending message: %s" % (payload))
+                myPrint("sending message: %s" % (payload))
                 msg = Message(payload)
                 msg.content_type = "application/json"
                 msg.content_encoding = "utf-8"
                 try:
                     await asyncio.wait_for(device_client.send_message(msg), timeout=await_timeout)
-                    print("completed sending message")
+                    myPrint("completed sending message")
                 except asyncio.TimeoutError:
                     continue
                 await asyncio.sleep(sendFrequency)  # sleep until it's time to send again
@@ -85,12 +92,12 @@ async def send_reportedProperty():
     while not terminate:
         if device_client and device_client.connected:
             reported_payload = {"sendFrequency": sendFrequency}
-            print("Sending reported property: {}".format(reported_payload))
+            myPrint("Sending reported property: {}".format(reported_payload))
             try:
                 await asyncio.wait_for(device_client.patch_twin_reported_properties(reported_payload), timeout=await_timeout)
             except asyncio.TimeoutError:
                 continue
-            await asyncio.sleep(15)  # sleep until it's time to send again
+            await asyncio.sleep(sendFrequency)  # sleep until it's time to send again
         else:
             await asyncio.sleep(yield_time) # do this to yield the busy loop or you will block all other tasks
 
@@ -99,7 +106,7 @@ async def send_reportedProperty():
 # handles desired properties from IoT Central (or hub) until terminated
 async def desired_property_handler(patch):
     global prop
-    print("Desired property received, the data in the desired properties patch is: {}".format(patch))
+    myPrint("Desired property received, the data in the desired properties patch is: {}".format(patch))
     # acknowledge the desired property back to IoT Central
     for key in list(patch.keys()):
         if key == "sendFrequency":
@@ -109,14 +116,14 @@ async def desired_property_handler(patch):
         if key != "$version":
             reported_payload = {key:{"value": patch[key], "ac":200, "ad":"completed", "av":patch['$version']}}
             await asyncio.wait_for(device_client.patch_twin_reported_properties(reported_payload), timeout=await_timeout)
-            print(reported_payload)
-    with open('Properties.txt', 'w') as outfile:
+            myPrint(reported_payload)
+    with open((str(pathlib.Path(__file__).parent.resolve())) + '/Properties.txt', 'w') as outfile:
             json.dump(prop, outfile)
 
 
 # handles direct methods from IoT Central (or hub) until terminated
 async def direct_method_handler(method_request):
-    print("executing direct method: %s(%s)" % (method_request.name, method_request.payload))
+    myPrint("executing direct method: %s(%s)" % (method_request.name, method_request.payload))
     method_response = None
     if method_request.name == "echo":
         # send response - echo back the payload
@@ -135,8 +142,8 @@ async def monitor_connection():
         if not trying_to_connect and not device_client.connected:
             device_client = None
             if not await connect():
-                print('Cannot connect to Azure IoT Central please check the application settings and machine connectivity')
-                print('Terminating all running tasks and exiting ...')
+                myPrint('Cannot connect to Azure IoT Central please check the application settings and machine connectivity')
+                myPrint('Terminating all running tasks and exiting ...')
                 terminate = True
         await asyncio.sleep(connection_monitor_sleep)
 
@@ -166,7 +173,7 @@ async def connect():
         try:
             registration_result = await provisioning_device_client.register()
         except (exceptions.CredentialError, exceptions.ConnectionFailedError, exceptions.ConnectionDroppedError, exceptions.ClientError, Exception) as e:
-            print("DPS registration exception: " + e)
+            myPrint("DPS registration exception: " + e)
             connection_attempt_count += 1
 
         if registration_result.status == "assigned":
@@ -191,7 +198,7 @@ async def connect():
 
 
         except Exception as e:
-            print("Connection failed, retry %d of %d" % (connection_attempt_count, max_connection_attempt))
+            myPrint("Connection failed, retry %d of %d" % (connection_attempt_count, max_connection_attempt))
             connection_attempt_count += 1
 
     return connected
@@ -214,14 +221,19 @@ async def main():
             pass # ignore the cancel actions on twin_listener and direct_method_listener
 
         # finally, disconnect
-        print("Disconnecting from IoT Hub")
+        myPrint("Disconnecting from IoT Hub")
         await device_client.disconnect()
     else:
-        print('Cannot connect to Azure IoT Central please check the application settings and machine connectivity')
+        myPrint('Cannot connect to Azure IoT Central please check the application settings and machine connectivity')
 
 # start the main routine
 if __name__ == "__main__":
-    loop = asyncio.run(main())
+    try:
+        loop = asyncio.run(main())
+    except Exception as e: # Catch traceback errors
+        with open((str(pathlib.Path(__file__).parent.resolve())) + '/log.txt', 'w+') as f:
+            f.write(str(e))
+            f.write(traceback.format_exc())
 
     # If using Python 3.6 or below, use the following code instead of asyncio.run(main()):
     # loop = asyncio.get_event_loop()

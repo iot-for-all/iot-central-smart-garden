@@ -1,1 +1,1 @@
-{"sendFrequency": 5}
+{"sendFrequency": 10}
